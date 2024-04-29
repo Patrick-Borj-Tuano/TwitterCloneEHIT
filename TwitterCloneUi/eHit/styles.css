@@ -1,0 +1,426 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+    background-color: #212121;
+    margin: 0;
+    overflow: auto;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+#username-display{
+    font-size: 20px;
+    color: white;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+#username-display:hover {
+    color: dodgerblue; 
+    text-decoration:none; 
+    cursor:pointer;  
+    padding-bottom: 5px;
+    border-bottom-style: solid;
+    border-bottom-width: 3.1px;
+    width: fit-content;
+}
+
+/* SIDEBAR */
+
+#sidebar {
+    width: 25%;
+    /*width: 20%*/
+    /*min-width: 270px;*/
+    height: 100%;
+    background-color: #272727;
+    float: left;
+    position: fixed;
+    z-index: 2;
+}
+
+#profile-container {
+    padding: 20px;
+    height: 30vh;
+    text-align: center;
+}
+
+#profile-picture-container {
+    width: 100%; 
+    height: 15vh;
+    border-radius: 50%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+#profile-pic {
+    width: 150px; 
+    height: 150px;
+    border-radius: 100%;
+}
+
+#username-container {
+    width: 100%; 
+    height: 10vh;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#sign-out-container {
+    width: 100%; 
+    height: 2.5vh;
+    border-radius: 50%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+#close-menu {
+    display: flex;
+    justify-content: flex-end;
+}
+
+#close-menu-button {
+    background-color: white;
+    padding: 5px;
+    border-radius: 25%;
+}
+
+#users-container {
+    padding: 20px;
+    height: 30vh;
+    overflow-y: scroll;
+}
+
+.search-container {
+    display: flex;
+    border: 1px solid black;
+    border-radius: 5px;
+}
+
+#user-list {
+    display:flex;
+    flex-direction: column;
+}
+
+.userDiv {
+    display:flex;
+    flex-direction: row;
+    padding: 8px;
+    margin-top: 10px;
+    border-radius: 15px;
+    background-color: #BD86FD;
+    border: 5px solid #23113B;
+}
+
+.userNameText {
+    font-family:'Segoe UI';
+    font-weight: 600;
+    color: #FFFFFF
+}
+
+.userFollowBtn {
+    margin-left: auto;
+    width: 70px;
+    background-color: #FFFFFF;
+    border-radius: 10px;
+    border-color: #333;
+    transition: 0.3s;
+}
+
+.userFollowBtn:hover {
+    background-color: lightslategrey;
+}
+
+.searchBox {
+    border: none;
+    padding: 10px;
+    flex: 1;
+    overflow: hidden;
+}
+
+#clearButton {
+    border: none;
+    background-color: #f2f2f2;
+    padding: 10px;
+    cursor: pointer;
+}   
+
+#sign-out-button {
+    border-radius: 5px;
+    padding: 1px;
+    transition: 0.3s;
+}
+
+#sign-out-button:hover {
+    background-color: #333;
+    color: white;
+}
+
+#trending-container {
+    padding: 20px;
+    border-top: 1px solid #585858;
+    height: 30vh;
+    color: white;
+}
+
+/* HOME PAGE */
+
+ul {
+    list-style-type: none;
+}
+
+#desktop-nav {
+    width: 75%;
+    /*width: 80%*/
+    /*min-width: 810px;*/
+    height: 100%;
+    background-color: rgb(0, 37, 61);
+    float: right;
+}
+
+#desktop-header {
+    display: flex;
+    background-color: #272727;
+    position: fixed;
+    width: 75%;
+    /* width: 80% */
+    /*min-width: 810px;*/
+    height: 50px;
+    z-index: 1;
+}
+
+#header-menu {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    height: 50px;
+    width: 100%;
+}
+
+#close-menu {
+    visibility: hidden;
+}
+
+#small-menu {
+    visibility: hidden;
+    width: 0%;
+    size: 10%;
+}
+
+#small-pic {
+    height: 100%;
+    width: height; 
+    z-index: 0;
+}
+
+.website-logo {
+    width: 65px;
+    height: 65px;
+}
+
+/* Radio Menu Styling */
+
+input[type="radio"] {
+    display: none;
+}
+
+label {
+    color: white;
+    transition: background-color 0.3s;
+    cursor: pointer;
+} 
+
+input[type="radio"]:checked + label {
+    color: #fff; /* Highlight text color */
+    font-weight: bold;
+    text-decoration: underline lightblue;
+    text-underline-offset: 15px;
+    text-decoration-thickness: 5px;
+}
+
+#logo-main {
+    width: 50px;
+    height: 100%;
+}
+
+.menu-main {
+    width: 50%;
+    height: 100%;
+    transition: 0.3s;
+}
+
+.menu-main:hover {
+    background-color: #333;
+    color: white;
+}
+
+#logo-main,
+.menu-main {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+/* POST BAR */
+
+main {
+    background-color: #212121;
+    padding: 5%;
+}
+
+.post {
+    background-color: #2E2E2E;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    margin-bottom: 20px;
+    margin-top: 20px;
+    display: flex; 
+    flex-direction: column; 
+}
+
+.post-head{
+    margin: 10px 0px;
+    display: flex;
+    align-items: center;
+}
+
+.post-head-user{
+    margin-left:20px;
+    color:#00F8DD;
+}
+
+.profile-picture{
+    border-radius: 100%;
+    width: 50px;
+    height: 50px;
+}
+
+.post p {
+    color: white;
+    word-wrap: break-word; 
+    overflow-wrap: break-word; 
+    flex-grow: 1; 
+    padding-left: 70px;
+    padding-bottom: 20px;
+}
+.postBtn {
+    background-color: #333;
+    color: #fff;
+    border: none;
+    margin-left: 4vh;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.postBtn:hover {
+    background-color: #555;
+}
+form {
+    margin-top: 5vh;
+}
+form input[type="text"],
+form textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    resize: none;
+}
+#postsContainer .placeholder-text {
+    margin-top: 10px;
+    margin-left: 4vh;
+    color: #666;
+}
+
+#post-input-container {
+    display: flex;
+    justify-content: center;
+}
+
+#post-submit-container {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.likeBtn {
+    background-color: #3498DB;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+    margin-left: auto;
+    transition: 0.3s;
+    min-width: 70px;
+}
+
+.likeBtn:hover {
+    background-color: #093b5d;
+}
+
+.likeCount {
+    margin-left: auto; 
+    color: #666;
+}
+
+/* Mobile Screen Size */
+@media only screen and (max-width: 700px) {
+    #sidebar {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        width: 80%;
+        top: 0;
+        left: -80%;
+        overflow-x: hidden;
+        background-color: #f1f1f1;
+        transition: transform 0.3s ease;
+        transform: translateX(0);
+        z-index: 3;
+    }
+    
+    #sidebar.show-sidebar {
+        transform: translateX(100%);
+    }
+
+    #desktop-nav {
+        width: 100%;
+        position: relative;
+        z-index: 2;
+    }
+    #desktop-header {
+        width: 100%;
+        min-width: unset;
+        position: relative;
+    }
+
+    #small-menu {
+        visibility: visible;
+        width: 10%;
+        size: 10%;
+    }
+
+    #header-menu {
+        width: 90%;
+    }
+    
+    #close-menu {
+        visibility: visible;
+    }
+}

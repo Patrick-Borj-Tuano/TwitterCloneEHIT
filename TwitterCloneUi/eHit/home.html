@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="homeScript.js"></script>
+    <script src="follow_api.js"></script>
+    <script src="post_api.js"></script>
+    <script src="like_api.js"></script>
+    
+</head>
+
+<body>
+
+    <div id="sidebar">
+        <div id="profile-container">
+            <div id="close-menu">
+                <button id="close-menu-button" onclick="closeMenu()">x</button>
+            </div>
+            <div id="profile-picture-container">
+                <img id="profile-pic" src="/eHit/Images/user.png" alt="Profile Picture">
+            </div>
+            <div id="username-container">
+                <a id="username-display" href="profile.html"> Your Username </a>
+            </div>
+            <div id="sign-out-container">    
+                <button id="sign-out-button" onclick="logOutTemp()">Sign Out</button>
+            </div>
+        </div>
+      
+        <div id="users-container">            
+            <!-- Potential User API Here -->
+
+            <div class="search-container">
+                <input type="text" class="searchBox" id="search-user-1" placeholder="Enter username" oninput="toggleSearchButton()">
+                <button id="clearButton" style="display: none;" onclick="followUser()">x</button>
+            </div>
+
+            <div id="user-list"></div>
+            <!-- Insert user list api here -->
+
+        </div>
+    
+        <div id="trending-container">
+            <h2>Trending</h2>
+            <!-- Potential Hashtags API Here -->
+            <ul id="randomList">
+            </ul>
+        </div>
+    </div>
+
+    <div id="desktop-nav">
+        <div>
+            <div id="desktop-header">
+                <div id="small-menu">
+                    <img id="small-pic" src="/eHit/Images/user.png" alt="Profile Picture">
+                </div>  
+                
+                <ul id="header-menu">
+                    <div class="menu-main">
+                        <li>
+                            <input type="radio" id="yourPost" name="menuOption" onclick="displayUserPosts()">
+                            <label for="yourPost">Your Post</label>
+                        </li>
+                    </div>
+                    <div id="logo-main">
+                        <li>
+                            <input type="radio" id="userAndFollowing" name="menuOption" onclick="DisplayUserAndFollowing()">
+                            <label for="userAndFollowing">
+                                <img class="website-logo" src="/Login-Signup/Images/eHit-logo-transparent.png" alt="website-logo">
+                            </label>
+                        </li>
+                    </div>
+                    <div class="menu-main">
+                        <li>
+                            <input type="radio" id="following" name="menuOption" onclick="DisplayFollowing()">
+                            <label for="following">Following</label>
+                        </li>
+                    </div>
+                </ul>
+
+            </div>
+            
+        </div>
+        <main>
+            <form id="postForm">
+                <div id="post-input-container">
+                    <textarea id="postContent" placeholder="What is happening?!" maxlength="280" required></textarea>
+                </div>
+                <div id="post-submit-container">
+                    <button type="submit" class="postBtn">Submit Post</button>
+                </div>
+            </form>
+    
+            <!-- container for posts -->
+            <div id="postsContainer">
+                <!-- Structure of Post When Created-->
+                <!-- <div class="post">
+                    <div class="post-head">
+                        <img class="profile-picture" src = 'sample_profile_picture.jpg'>
+                        <span>USERNAME</span>  
+                        <span>Time</span>                     
+                    </div>
+                    <p>
+                            Hello
+                    </p>
+                    <button class="likeBtn" >
+
+                    </button>
+                    <span class="likeCount"></span>
+                </div> -->
+
+            </div>
+        </main>
+    </div>
+    
+    <script>
+        // Retrieve the username from localStorage
+        var username = localStorage.getItem('username');
+        
+        document.addEventListener('DOMContentLoaded', function () {
+
+        // Display the username in the username container
+        const usernameDisplay = document.getElementById('username-display');
+        usernameDisplay.textContent = username;
+
+        // Display Profile Picture based on username
+        const profilePictureDisplay = document.getElementById('profile-pic');
+
+        function imageExists(url, callback) {
+        var img = new Image();
+        img.onload = function () {
+            callback(true);
+        };
+        img.onerror = function () {
+            callback(false);
+        };
+        img.src = url;
+        }
+
+        const defaultImagePath = "/eHit/Images/user.png";
+
+        imageExists("/eHit/Images/" + username + ".png", function (exists) {
+        // Set the image source based on whether it exists or not
+        profilePictureDisplay.src = exists ? "/eHit/Images/" + username + ".png" : defaultImagePath;
+        });
+
+        
+        DisplayUserAndFollowing();
+        populateUserList();
+
+
+        const postsContainer = document.getElementById('postsContainer');
+
+        document.addEventListener('click', function(event) {
+        // Check if the clicked element has the class 'likeBtn'
+        if (event.target.classList.contains('likeBtn')) {
+        // Get the postId attribute of the clicked button
+        var postId = event.target.getAttribute('postId');
+        console.log('postId:', postId);
+
+        var btnContent = event.target.textContent;
+        console.log('Button Content:', btnContent);
+
+        if (btnContent === "Like") {
+            // Add your code here if the button content is "Like"
+            console.log("Button content is 'Like'. Add your code here.");
+
+            try {
+                const res = fetch(`/api/v1/posts/${postId}`, {
+                    method: "PATCH",
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        action: "like"
+                    })
+                });
+                var whereUser = localStorage.getItem('whereUser');
+                if (whereUser === "BOTHPOST"){
+                    DisplayUserAndFollowing();
+                }
+                else if (whereUser === "FOLLOWINGPOST"){
+                    DisplayFollowing();
+                }
+                else{
+                    displayUserPosts();
+                }
+
+                if (!res.ok) {
+                    console.error(`Error: ${res.status} ${res.statusText}`);
+                    return;
+                }
+
+                
+
+                const responseText = res.text();  // corrected syntax
+            } catch (error) {
+                console.error(`Error:`, error);
+            }
+
+            
+
+        } else {
+            // Add your code here if the button content is not "Like"
+            console.log("Button content is not 'Like'. Add your code here.");
+            try {
+                const res = fetch(`/api/v1/posts/${postId}`, {
+                    method: "PATCH",
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        action: "unlike"
+                    })
+                });
+
+                var whereUser = localStorage.getItem('whereUser');
+                if (whereUser === "BOTHPOST"){
+                    DisplayUserAndFollowing();
+                }
+                else if (whereUser === "FOLLOWINGPOST"){
+                    DisplayFollowing();
+                }
+                else{
+                    displayUserPosts();
+                }
+
+
+                if (!res.ok) {
+                    console.error(`Error: ${res.status} ${res.statusText}`);
+                    return;
+                }
+
+               
+                const responseText = res.text();  // corrected syntax
+                reloadOnce()
+            } catch (error) {
+                console.error(`Error:`, error);
+            }
+            }
+            }
+        });
+           
+        function toggleSearchButton() {
+        var inputText = document.getElementById('search-user-1').value;
+        var button = document.getElementById('clearButton');
+
+        if (inputText.trim() !== '') {
+            button.style.display = 'inline-block';
+        } else {
+            button.style.display = 'none';
+        }
+        }
+
+        // Example functions for like/unlike post actions
+        async function likePost(postId) {
+        // Implement your like post logic here
+        }
+
+        async function unlikePost(postId) {
+        // Implement your unlike post logic here
+        }
+        });
+
+        function clearText() {
+            var inputElement = document.getElementById('search-user-1');
+            inputElement.value = '';
+            toggleSearchButton();
+        }
+
+        //posting logic
+        document.getElementById('postForm').addEventListener('submit', function(event) {
+            event.preventDefault(); //prevents the default submission behavior
+            const currentDate = new Date().toISOString();
+            userPost();
+            document.getElementById('postContent').value = '';
+
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const smallMenu = document.getElementById('small-menu');
+            const sidebar = document.getElementById('sidebar');
+
+            smallMenu.addEventListener('click', function () {
+                sidebar.classList.toggle('show-sidebar');
+            });
+        });
+
+        function closeMenu(){
+            sidebar.classList.toggle('show-sidebar');
+        }
+
+        function shuffleArray(array) {
+            const endIndex = Math.min(5, array.length);
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array.slice(0, endIndex);
+        }
+
+        // Fetch data from the text file
+        fetch('trending.txt')
+            .then(response => response.text())
+            .then(data => {
+                // Split the data into an array of lines
+                const lines = data.split('\n').filter(line => line.trim() !== '');
+
+                // Shuffle the array of lines
+                const shuffledLines = shuffleArray(lines);
+
+                // Create and populate the list
+                const listElement = document.getElementById('randomList');
+                shuffledLines.forEach(line => {
+                    const listItem = document.createElement('li');
+                    listItem.textContent = line;
+                    listElement.appendChild(listItem);
+                });
+            })
+        .catch(error => console.error('Error fetching data:', error));
+
+    </script>
+
+</body>
+</html>

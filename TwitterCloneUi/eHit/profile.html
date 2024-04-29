@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="profile.css">
+    <script src="homeScript.js"></script>
+    <script src="post_api.js"></script>
+    <script src="like_api.js"></script>
+</head>
+<body>
+    <div class="profile-container">
+        <div class="return-container">
+            <button id="return-button" onclick="returnHome()">X</button>
+        </div>
+        <div class="header-container">
+           
+            <div class="image">
+                <img id="profile-pic"></img>
+            </div>
+          
+            <div class="text-headers">
+                <span class="text-username" id="username-display">Username</span>
+            </div>
+            <div class="text-headers">
+                <span class="text">Your Post</span>
+            </div>
+        </div>
+        
+        <div class="user-tweet-container">
+            <div id="postsContainer"></div>
+
+            <!-- Structure of Post When Created-->
+                <!-- <div class="post">
+                    <div class="post-head">
+                        <img class="profile-picture" src = 'sample_profile_picture.jpg'>
+                        <span>USERNAME</span>  
+                        <span>Time</span>                     
+                    </div>
+                    <p>
+                            Hello
+                    </p>
+                    <button class="likeBtn" >
+
+                    </button>
+                    <span class="likeCount"></span>
+                </div> -->
+        </div>    
+    </div>
+
+    <script>
+         // Retrieve the username from localStorage
+        var username = localStorage.getItem('username');
+        document.addEventListener('DOMContentLoaded', function () { 
+            // Display the username in the username container
+            const usernameDisplay = document.getElementById('username-display');
+            usernameDisplay.textContent = username;
+            console.log('hello')
+            displayUserPosts();
+        });
+
+        
+        const profilePictureDisplay = document.getElementById('profile-pic');
+
+        function imageExists(url, callback) {
+        var img = new Image();
+        img.onload = function () {
+            callback(true);
+        };
+        img.onerror = function () {
+            callback(false);
+        };
+        img.src = url;
+        }
+
+        const defaultImagePath = "/eHit/Images/user.png";
+
+        imageExists("/eHit/Images/" + username + ".png", function (exists) {
+        // Set the image source based on whether it exists or not
+        profilePictureDisplay.src = exists ? "/eHit/Images/" + username + ".png" : defaultImagePath;
+        });
+
+
+        document.addEventListener('click', function(event) {
+        // Check if the clicked element has the class 'likeBtn'
+        if (event.target.classList.contains('likeBtn')) {
+        // Get the postId attribute of the clicked button
+        var postId = event.target.getAttribute('postId');
+        console.log('postId:', postId);
+
+        var btnContent = event.target.textContent;
+        console.log('Button Content:', btnContent);
+
+        if (btnContent === "Like") {
+            // Add your code here if the button content is "Like"
+            console.log("Button content is 'Like'. Add your code here.");
+
+            try {
+                const res = fetch(`/api/v1/posts/${postId}`, {
+                    method: "PATCH",
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        action: "like"
+                    })
+                });
+                var whereUser = localStorage.getItem('whereUser');
+                if (whereUser === "BOTHPOST"){
+                    DisplayUserAndFollowing();
+                }
+                else if (whereUser === "FOLLOWINGPOST"){
+                    DisplayFollowing();
+                }
+                else{
+                    displayUserPosts();
+                }
+
+                if (!res.ok) {
+                    console.error(`Error: ${res.status} ${res.statusText}`);
+                    return;
+                }
+
+                
+
+                const responseText = res.text();  // corrected syntax
+            } catch (error) {
+                console.error(`Error:`, error);
+            }
+
+            
+
+        } else {
+            // Add your code here if the button content is not "Like"
+            console.log("Button content is not 'Like'. Add your code here.");
+            try {
+                const res = fetch(`/api/v1/posts/${postId}`, {
+                    method: "PATCH",
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        action: "unlike"
+                    })
+                });
+
+                var whereUser = localStorage.getItem('whereUser');
+                if (whereUser === "BOTHPOST"){
+                    DisplayUserAndFollowing();
+                }
+                else if (whereUser === "FOLLOWINGPOST"){
+                    DisplayFollowing();
+                }
+                else{
+                    displayUserPosts();
+                }
+
+
+                if (!res.ok) {
+                    console.error(`Error: ${res.status} ${res.statusText}`);
+                    return;
+                }
+
+               
+                const responseText = res.text();  // corrected syntax
+                reloadOnce()
+            } catch (error) {
+                console.error(`Error:`, error);
+            }
+            }
+            }
+        });
+
+        
+
+        
+    </script>
+    
+
+   
+</body>
+</html>
